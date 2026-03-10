@@ -1,0 +1,31 @@
+import javax.swing.JFrame;
+
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
+
+public class App {
+    public static void main(String[] args) {
+        JFrame game = new JFrame("Game");
+        game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        GraphicsEnvironment graphicEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice screen = graphicEnv.getDefaultScreenDevice();
+
+        if (screen.isFullScreenSupported()) {
+            // Exclusive FullScreen
+            game.setVisible(true);
+            screen.setFullScreenWindow(game);
+        } else {
+            // Borderless FullScreen
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            game.setUndecorated(true);
+            game.setSize(screenSize);
+            game.setLocation(0, 0);
+            game.setExtendedState(Frame.MAXIMIZED_BOTH);
+            game.setVisible(true);
+        }
+    }
+}

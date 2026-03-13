@@ -4,12 +4,15 @@ public class InputEvent {
     long timestamp;
     char key;
     boolean press;
-    int trackNumber;
-    int columnNumber;
+    int track;
+    int index;
 
-    public InputEvent(char key, boolean press) {
-        this.timestamp = System.nanoTime();
+    public InputEvent(long timestamp, char key, boolean press, int track, int index) {
+        this.timestamp = timestamp;
         this.key = key;
+        this.press = press;
+        this.track = track;
+        this.index = index;
     }
 
     public long getTimestamp() {
@@ -24,11 +27,11 @@ public class InputEvent {
         return press;
     }
 
-    public int getTrackNumber() {
-        return trackNumber;
+    public int getTrack() {
+        return track;
     }
 
-    public int getColumnNumber() {
-        return columnNumber;
+    public int getIndex() {
+        return index;
     }
 }

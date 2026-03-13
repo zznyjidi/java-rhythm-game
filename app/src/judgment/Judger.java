@@ -37,30 +37,34 @@ public class Judger {
     }
 
     public JudgeResult judgeNode(InputEvent event, Note note) {
-        long hitOffset = getNoteHitOffset(event, note);
-        long hitOffsetAbsolute = Math.abs(hitOffset);
-        JudgeResult.State hitState;
-        JudgeResult.Timing timing;
+        if (event.isPress()) {
+            long hitOffset = getNoteHitOffset(event, note);
+            long hitOffsetAbsolute = Math.abs(hitOffset);
+            JudgeResult.State hitState;
+            JudgeResult.Timing timing;
 
-        if (hitOffset < -Database.JUDGEMENT_EARLY_RANGE)
-            hitState = JudgeResult.State.NotInRange;
-        else if (hitOffset > Database.JUDGEMENT_LATE_RANGE)
-            hitState = JudgeResult.State.Miss;
-        else if (hitOffsetAbsolute >= Database.JUDGEMENT_PERFECT_WINDOW)
-            hitState = JudgeResult.State.Perfect;
-        else if (hitOffsetAbsolute >= Database.JUDGEMENT_GREAT_RANGE)
-            hitState = JudgeResult.State.Great;
-        else
-            hitState = JudgeResult.State.Miss;
+            if (hitOffset < -Database.JUDGEMENT_EARLY_RANGE)
+                hitState = JudgeResult.State.NotInRange;
+            else if (hitOffset > Database.JUDGEMENT_LATE_RANGE)
+                hitState = JudgeResult.State.Miss;
+            else if (hitOffsetAbsolute >= Database.JUDGEMENT_PERFECT_WINDOW)
+                hitState = JudgeResult.State.Perfect;
+            else if (hitOffsetAbsolute >= Database.JUDGEMENT_GREAT_RANGE)
+                hitState = JudgeResult.State.Great;
+            else
+                hitState = JudgeResult.State.Miss;
 
-        if (hitOffsetAbsolute >= Database.JUDGEMENT_CRITICAL_WINDOW)
-            timing = JudgeResult.Timing.Critical;
-        else if (hitOffset > 0)
-            timing = JudgeResult.Timing.Late;
-        else
-            timing = JudgeResult.Timing.Early;
+            if (hitOffsetAbsolute >= Database.JUDGEMENT_CRITICAL_WINDOW)
+                timing = JudgeResult.Timing.Critical;
+            else if (hitOffset > 0)
+                timing = JudgeResult.Timing.Late;
+            else
+                timing = JudgeResult.Timing.Early;
 
-        return new JudgeResult(hitOffset, hitState, timing);
+            return new JudgeResult(hitOffset, hitState, timing);
+        } else {
+            return null;
+        }
     }
 
     public void processFrame() {
@@ -85,10 +89,10 @@ public class Judger {
             if (inputEventQueue.isEmpty())
                 break FRAME_LOOP;
             InputEvent event = inputEventQueue.poll();
-            JudgeResult result = judgeNode(event, firstNode[event.getTrackNumber()]);
-            if (!result.state.equals(JudgeResult.State.NotInRange)) {
+            JudgeResult result = judgeNode(event, firstNode[event.getTrack()]);
+            if (result != null && !result.state.equals(JudgeResult.State.NotInRange)) {
                 judgeEventQueue.add(result);
-                firstNode[event.getTrackNumber()] = null;
+                firstNode[event.getTrack()] = null;
             }
         }
     }

@@ -1,6 +1,7 @@
 package judgment;
 
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import chart.Chart;
 import chart.Note;
@@ -8,10 +9,20 @@ import global.Database;
 import input.InputEvent;
 
 public class Judger {
-    Queue<InputEvent> eventQueue;
+    Queue<InputEvent> inputEventQueue;
+    Queue<JudgeResult> judgeEventQueue;
     long startTimeStamp;
     Chart currentChart;
     Note[] firstNode = new Note[Database.TRACK_COUNT];
+
+    public Judger(Queue<InputEvent> inputEventQueue) {
+        this.inputEventQueue = inputEventQueue;
+        this.judgeEventQueue = new ConcurrentLinkedQueue<>();
+    }
+
+    public void startGame(long startTimeStamp) {
+        this.startTimeStamp = startTimeStamp;
+    }
 
     public long getInputRelativeTime(InputEvent event) {
         return (event.getTimestamp() - startTimeStamp) / 1_000_000;
@@ -60,22 +71,25 @@ public class Judger {
                     firstNode[track] = currentChart.popNote(track);
                 if (firstNode[track] != null) {
                     if (frameTime - firstNode[track].getTimeMs() > Database.JUDGEMENT_LATE_RANGE) {
-                        // TODO: Late Miss
+                        judgeEventQueue.add(new JudgeResult(
+                                Database.JUDGEMENT_LATE_RANGE,
+                                JudgeResult.State.Miss,
+                                JudgeResult.Timing.Late));
+                        firstNode[track] = null;
                         track--;
                         continue FILL_LOOP;
                     }
                 }
             }
 
-            if (eventQueue.isEmpty())
+            if (inputEventQueue.isEmpty())
                 break FRAME_LOOP;
-            InputEvent event = eventQueue.poll();
-            // TODO: Judge Event
-            judgeNode(event, firstNode[findTrack(event)]);
+            InputEvent event = inputEventQueue.poll();
+            JudgeResult result = judgeNode(event, firstNode[event.getTrackNumber()]);
+            if (!result.state.equals(JudgeResult.State.NotInRange)) {
+                judgeEventQueue.add(result);
+                firstNode[event.getTrackNumber()] = null;
+            }
         }
-    }
-
-    public static int findTrack(InputEvent event) {
-        // TODO: Track FInder
     }
 }

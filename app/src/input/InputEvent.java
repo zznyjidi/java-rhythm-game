@@ -2,18 +2,33 @@ package input;
 
 public class InputEvent {
     long timestamp;
-    String event;
+    char key;
+    boolean press;
+    int trackNumber;
+    int columnNumber;
 
-    public InputEvent(String event) {
+    public InputEvent(char key, boolean press) {
         this.timestamp = System.nanoTime();
-        this.event = event;
+        this.key = key;
     }
 
     public long getTimestamp() {
         return timestamp;
     }
 
-    public String getEvent() {
-        return event;
+    public char getKey() {
+        return key;
+    }
+
+    public boolean isPress() {
+        return press;
+    }
+
+    public int getTrackNumber() {
+        return trackNumber;
+    }
+
+    public int getColumnNumber() {
+        return columnNumber;
     }
 }

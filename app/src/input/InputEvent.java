@@ -2,12 +2,12 @@ package input;
 
 public class InputEvent {
     long timestamp;
-    char key;
+    String key;
     boolean press;
     int track;
     int index;
 
-    public InputEvent(long timestamp, char key, boolean press, int track, int index) {
+    public InputEvent(long timestamp, String key, boolean press, int track, int index) {
         this.timestamp = timestamp;
         this.key = key;
         this.press = press;
@@ -19,7 +19,7 @@ public class InputEvent {
         return timestamp;
     }
 
-    public char getKey() {
+    public String getKey() {
         return key;
     }
 

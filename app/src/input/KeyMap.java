@@ -35,10 +35,7 @@ public class KeyMap {
                         if (eventID != KeyEvent.KEY_PRESSED && eventID != KeyEvent.KEY_RELEASED)
                             return false;
 
-                        String keyPress = KeyEvent.getKeyText(e.getKeyCode());
-                        if (keyPress.length() != 1)
-                            return false;
-                        char key = keyPress.charAt(0);
+                        String key = KeyEvent.getKeyText(e.getKeyCode());
 
                         for (int i = 0; i < Database.keyMap.size(); i++) {
                             if (Database.keyMap.get(i).containsKey(key)) {

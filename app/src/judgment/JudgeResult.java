@@ -30,4 +30,13 @@ public class JudgeResult {
     public Timing getTiming() {
         return timing;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                " timeOffset='" + getTimeOffset() + "'" +
+                ", state='" + getState() + "'" +
+                ", timing='" + getTiming() + "'" +
+                "}";
+    }
 }

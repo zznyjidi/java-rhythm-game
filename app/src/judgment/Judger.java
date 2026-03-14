@@ -11,7 +11,7 @@ import javax.swing.Timer;
 
 import chart.Chart;
 import chart.Note;
-import global.Database;
+import global.Config;
 import input.InputEvent;
 
 public class Judger implements ActionListener {
@@ -22,7 +22,7 @@ public class Judger implements ActionListener {
     Queue<JudgeResult> judgeEventQueue;
     long startTimeStamp;
     Chart currentChart;
-    Note[] firstNode = new Note[Database.TRACK_COUNT];
+    Note[] firstNode = new Note[Config.TRACK_COUNT];
 
     public Judger(Queue<InputEvent> inputEventQueue) {
         this.inputEventQueue = inputEventQueue;
@@ -58,18 +58,18 @@ public class Judger implements ActionListener {
             JudgeResult.State hitState;
             JudgeResult.Timing timing;
 
-            if (hitOffset < -Database.JUDGEMENT_EARLY_RANGE)
+            if (hitOffset < -Config.JUDGEMENT_EARLY_RANGE)
                 hitState = JudgeResult.State.NotInRange;
-            else if (hitOffset > Database.JUDGEMENT_LATE_RANGE)
+            else if (hitOffset > Config.JUDGEMENT_LATE_RANGE)
                 hitState = JudgeResult.State.Miss;
-            else if (hitOffsetAbsolute >= Database.JUDGEMENT_PERFECT_WINDOW)
+            else if (hitOffsetAbsolute >= Config.JUDGEMENT_PERFECT_WINDOW)
                 hitState = JudgeResult.State.Perfect;
-            else if (hitOffsetAbsolute >= Database.JUDGEMENT_GREAT_RANGE)
+            else if (hitOffsetAbsolute >= Config.JUDGEMENT_GREAT_RANGE)
                 hitState = JudgeResult.State.Great;
             else
                 hitState = JudgeResult.State.Miss;
 
-            if (hitOffsetAbsolute >= Database.JUDGEMENT_CRITICAL_WINDOW)
+            if (hitOffsetAbsolute >= Config.JUDGEMENT_CRITICAL_WINDOW)
                 timing = JudgeResult.Timing.Critical;
             else if (hitOffset > 0)
                 timing = JudgeResult.Timing.Late;
@@ -91,13 +91,13 @@ public class Judger implements ActionListener {
         try {
             long frameTime = getRelativeChartTime();
             FRAME_LOOP: while (true) {
-                FILL_LOOP: for (int track = 0; track < Database.TRACK_COUNT; track++) {
+                FILL_LOOP: for (int track = 0; track < Config.TRACK_COUNT; track++) {
                     if (firstNode[track] == null)
                         firstNode[track] = currentChart.popNote(track);
                     if (firstNode[track] != null) {
-                        if (frameTime - firstNode[track].getTimeMs() > Database.JUDGEMENT_LATE_RANGE) {
+                        if (frameTime - firstNode[track].getTimeMs() > Config.JUDGEMENT_LATE_RANGE) {
                             judgeEventQueue.add(new JudgeResult(
-                                    Database.JUDGEMENT_LATE_RANGE,
+                                    Config.JUDGEMENT_LATE_RANGE,
                                     JudgeResult.State.Miss,
                                     JudgeResult.Timing.Late));
                             firstNode[track] = null;

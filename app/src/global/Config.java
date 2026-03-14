@@ -1,10 +1,12 @@
 package global;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Database {
+public class Config {
     public static final int TRACK_COUNT = 3;
 
     public static final int JUDGEMENT_PERFECT_WINDOW = 30;
@@ -35,4 +37,6 @@ public class Database {
                 "M", 6, "Comma", 7, "Period", 8,
                 "Slash", 9));
     }
+
+    public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 }

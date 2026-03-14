@@ -10,7 +10,7 @@ import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 
-import global.Database;
+import global.Config;
 
 public class KeyMap {
     InputMap inputMap;
@@ -37,11 +37,11 @@ public class KeyMap {
 
                         String key = KeyEvent.getKeyText(e.getKeyCode());
 
-                        for (int i = 0; i < Database.keyMap.size(); i++) {
-                            if (Database.keyMap.get(i).containsKey(key)) {
+                        for (int i = 0; i < Config.keyMap.size(); i++) {
+                            if (Config.keyMap.get(i).containsKey(key)) {
                                 eventQueue.add(new InputEvent(
                                         nanoTime, key, eventID == KeyEvent.KEY_PRESSED,
-                                        i, Database.keyMap.get(i).get(key)));
+                                        i, Config.keyMap.get(i).get(key)));
                                 return true;
                             }
                         }

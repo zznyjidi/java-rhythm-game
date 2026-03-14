@@ -1,14 +1,23 @@
 package judgment;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import javax.swing.Timer;
 
 import chart.Chart;
 import chart.Note;
 import global.Database;
 import input.InputEvent;
 
-public class Judger {
+public class Judger implements ActionListener {
+    Timer judgementFrameTimer = new Timer(1, this);
+    Lock frameLock = new ReentrantLock();
+
     Queue<InputEvent> inputEventQueue;
     Queue<JudgeResult> judgeEventQueue;
     long startTimeStamp;
@@ -20,8 +29,10 @@ public class Judger {
         this.judgeEventQueue = new ConcurrentLinkedQueue<>();
     }
 
-    public void startGame(long startTimeStamp) {
+    public void startGame(long startTimeStamp, Chart chart) {
         this.startTimeStamp = startTimeStamp;
+        this.currentChart = chart;
+        this.judgementFrameTimer.start();
     }
 
     public long getInputRelativeTime(InputEvent event) {
@@ -34,6 +45,10 @@ public class Judger {
 
     public long getRelativeChartTime() {
         return (System.nanoTime() - startTimeStamp) / 1_000_000;
+    }
+
+    public Queue<JudgeResult> getQueue() {
+        return judgeEventQueue;
     }
 
     public JudgeResult judgeNode(InputEvent event, Note note) {
@@ -67,33 +82,44 @@ public class Judger {
         }
     }
 
-    public void processFrame() {
-        long frameTime = getRelativeChartTime();
-        FRAME_LOOP: while (true) {
-            FILL_LOOP: for (int track = 0; track < Database.TRACK_COUNT; track++) {
-                if (firstNode[track] == null)
-                    firstNode[track] = currentChart.popNote(track);
-                if (firstNode[track] != null) {
-                    if (frameTime - firstNode[track].getTimeMs() > Database.JUDGEMENT_LATE_RANGE) {
-                        judgeEventQueue.add(new JudgeResult(
-                                Database.JUDGEMENT_LATE_RANGE,
-                                JudgeResult.State.Miss,
-                                JudgeResult.Timing.Late));
-                        firstNode[track] = null;
-                        track--;
-                        continue FILL_LOOP;
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (!frameLock.tryLock()) {
+            IO.println("O");
+            return;
+        }
+        try {
+            long frameTime = getRelativeChartTime();
+            FRAME_LOOP: while (true) {
+                FILL_LOOP: for (int track = 0; track < Database.TRACK_COUNT; track++) {
+                    if (firstNode[track] == null)
+                        firstNode[track] = currentChart.popNote(track);
+                    if (firstNode[track] != null) {
+                        if (frameTime - firstNode[track].getTimeMs() > Database.JUDGEMENT_LATE_RANGE) {
+                            judgeEventQueue.add(new JudgeResult(
+                                    Database.JUDGEMENT_LATE_RANGE,
+                                    JudgeResult.State.Miss,
+                                    JudgeResult.Timing.Late));
+                            firstNode[track] = null;
+                            track--;
+                            continue FILL_LOOP;
+                        }
                     }
                 }
-            }
 
-            if (inputEventQueue.isEmpty())
-                break FRAME_LOOP;
-            InputEvent event = inputEventQueue.poll();
-            JudgeResult result = judgeNode(event, firstNode[event.getTrack()]);
-            if (result != null && !result.state.equals(JudgeResult.State.NotInRange)) {
-                judgeEventQueue.add(result);
-                firstNode[event.getTrack()] = null;
+                if (inputEventQueue.isEmpty())
+                    break FRAME_LOOP;
+                InputEvent event = inputEventQueue.poll();
+                if (firstNode[event.getTrack()] == null)
+                    continue FRAME_LOOP;
+                JudgeResult result = judgeNode(event, firstNode[event.getTrack()]);
+                if (result != null && !result.state.equals(JudgeResult.State.NotInRange)) {
+                    judgeEventQueue.add(result);
+                    firstNode[event.getTrack()] = null;
+                }
             }
+        } finally {
+            frameLock.unlock();
         }
     }
 }

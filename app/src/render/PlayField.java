@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -19,7 +20,7 @@ public class PlayField extends JPanel {
     KeyMap keyMap;
     Judger judger;
 
-    Set<Drawable> drawingObject;
+    Set<Drawable> drawingObject = new CopyOnWriteArraySet<>();
 
     public PlayField() {
         this.setPreferredSize(Config.screenSize);

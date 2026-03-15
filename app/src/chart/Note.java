@@ -56,4 +56,16 @@ public class Note {
     public int getExtraParam() {
         return extraParam;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                " type='" + getType() + "'" +
+                ", timeMs='" + getTimeMs() + "'" +
+                ", duration='" + getDuration() + "'" +
+                ", track='" + getTrack() + "'" +
+                ", direction='" + getDirection() + "'" +
+                ", extraParam='" + getExtraParam() + "'" +
+                "}";
+    }
 }

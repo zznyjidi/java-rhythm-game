@@ -111,13 +111,15 @@ public class Judger implements ActionListener {
                 if (inputEventQueue.isEmpty())
                     break FRAME_LOOP;
                 InputEvent event = inputEventQueue.poll();
-                if (firstNode[event.getTrack()] == null)
+                if (firstNode[event.getTrack()] == null) {
+                    judgeEventQueue.add(new JudgeResult(null, frameTime, JudgeResult.State.NotInRange, null));
                     continue FRAME_LOOP;
+                }
                 JudgeResult result = judgeNode(event, firstNode[event.getTrack()]);
                 if (result != null) {
                     judgeEventQueue.add(result);
                     if (result.getState() != JudgeResult.State.NotInRange)
-                    firstNode[event.getTrack()] = null;
+                        firstNode[event.getTrack()] = null;
                 }
             }
         } finally {

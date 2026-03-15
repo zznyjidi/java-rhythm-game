@@ -76,7 +76,7 @@ public class Judger implements ActionListener {
             else
                 timing = JudgeResult.Timing.Early;
 
-            return new JudgeResult(hitOffset, hitState, timing);
+            return new JudgeResult(note, hitOffset, hitState, timing);
         } else {
             return null;
         }
@@ -97,6 +97,7 @@ public class Judger implements ActionListener {
                     if (firstNode[track] != null) {
                         if (frameTime - firstNode[track].getTimeMs() > Config.JUDGEMENT_LATE_RANGE) {
                             judgeEventQueue.add(new JudgeResult(
+                                    firstNode[track],
                                     Config.JUDGEMENT_LATE_RANGE,
                                     JudgeResult.State.Miss,
                                     JudgeResult.Timing.Late));

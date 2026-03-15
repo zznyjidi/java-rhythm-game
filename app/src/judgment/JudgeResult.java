@@ -1,5 +1,7 @@
 package judgment;
 
+import chart.Note;
+
 public class JudgeResult {
     static enum State {
         Perfect, Great, Miss, NotInRange
@@ -13,7 +15,10 @@ public class JudgeResult {
     State state;
     Timing timing;
 
-    public JudgeResult(long timeOffset, State state, Timing timing) {
+    Note note;
+
+    public JudgeResult(Note note, long timeOffset, State state, Timing timing) {
+        this.note = note;
         this.timeOffset = timeOffset;
         this.state = state;
         this.timing = timing;
@@ -31,12 +36,17 @@ public class JudgeResult {
         return timing;
     }
 
+    public Note getNote() {
+        return note;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 " timeOffset='" + getTimeOffset() + "'" +
                 ", state='" + getState() + "'" +
                 ", timing='" + getTiming() + "'" +
+                ", note='" + getNote() + "'" +
                 "}";
     }
 }

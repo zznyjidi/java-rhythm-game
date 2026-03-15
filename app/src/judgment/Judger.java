@@ -85,7 +85,7 @@ public class Judger implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!frameLock.tryLock()) {
-            IO.println("O");
+            System.err.println("O");
             return;
         }
         try {

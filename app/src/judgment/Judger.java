@@ -116,6 +116,7 @@ public class Judger implements ActionListener {
                 JudgeResult result = judgeNode(event, firstNode[event.getTrack()]);
                 if (result != null) {
                     judgeEventQueue.add(result);
+                    if (result.getState() != JudgeResult.State.NotInRange)
                     firstNode[event.getTrack()] = null;
                 }
             }

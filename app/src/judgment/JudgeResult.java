@@ -65,4 +65,38 @@ public class JudgeResult {
                 ", note='" + getNote() + "'" +
                 "}";
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (frameTime ^ (frameTime >>> 32));
+        result = prime * result + ((inputEvent == null) ? 0 : inputEvent.hashCode());
+        result = prime * result + ((note == null) ? 0 : note.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        JudgeResult other = (JudgeResult) obj;
+        if (frameTime != other.frameTime)
+            return false;
+        if (inputEvent == null) {
+            if (other.inputEvent != null)
+                return false;
+        } else if (!inputEvent.equals(other.inputEvent))
+            return false;
+        if (note == null) {
+            if (other.note != null)
+                return false;
+        } else if (!note.equals(other.note))
+            return false;
+        return true;
+    }
 }

@@ -46,4 +46,34 @@ public class InputEvent {
                 "}";
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (timestamp ^ (timestamp >>> 32));
+        result = prime * result + ((key == null) ? 0 : key.hashCode());
+        result = prime * result + (press ? 1231 : 1237);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        InputEvent other = (InputEvent) obj;
+        if (timestamp != other.timestamp)
+            return false;
+        if (key == null) {
+            if (other.key != null)
+                return false;
+        } else if (!key.equals(other.key))
+            return false;
+        if (press != other.press)
+            return false;
+        return true;
+    }
 }

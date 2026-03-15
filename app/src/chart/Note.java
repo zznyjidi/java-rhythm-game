@@ -68,4 +68,41 @@ public class Note {
                 ", extraParam='" + getExtraParam() + "'" +
                 "}";
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        result = prime * result + (int) (timeMs ^ (timeMs >>> 32));
+        result = prime * result + (int) (duration ^ (duration >>> 32));
+        result = prime * result + track;
+        result = prime * result + direction;
+        result = prime * result + extraParam;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Note other = (Note) obj;
+        if (type != other.type)
+            return false;
+        if (timeMs != other.timeMs)
+            return false;
+        if (duration != other.duration)
+            return false;
+        if (track != other.track)
+            return false;
+        if (direction != other.direction)
+            return false;
+        if (extraParam != other.extraParam)
+            return false;
+        return true;
+    }
 }

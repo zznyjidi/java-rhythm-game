@@ -51,7 +51,7 @@ public class Judger implements ActionListener {
         return judgeEventQueue;
     }
 
-    public JudgeResult judgeNode(InputEvent event, Note note) {
+    public JudgeResult judgeNode(long frameTime, InputEvent event, Note note) {
         if (event.isPress()) {
             long hitOffset = getNoteHitOffset(event, note);
             long hitOffsetAbsolute = Math.abs(hitOffset);
@@ -76,7 +76,7 @@ public class Judger implements ActionListener {
             else
                 timing = JudgeResult.Timing.Early;
 
-            return new JudgeResult(note, hitOffset, hitState, timing);
+            return new JudgeResult(frameTime, event, note, hitOffset, hitState, timing);
         } else {
             return null;
         }
@@ -97,8 +97,8 @@ public class Judger implements ActionListener {
                     if (firstNode[track] != null) {
                         if (frameTime - firstNode[track].getTimeMs() > Config.JUDGEMENT_LATE_RANGE) {
                             judgeEventQueue.add(new JudgeResult(
-                                    firstNode[track],
-                                    Config.JUDGEMENT_LATE_RANGE,
+                                    frameTime, null, firstNode[track],
+                                    Config.JUDGEMENT_LATE_RANGE + 1,
                                     JudgeResult.State.Miss,
                                     JudgeResult.Timing.Late));
                             firstNode[track] = null;
@@ -112,10 +112,12 @@ public class Judger implements ActionListener {
                     break FRAME_LOOP;
                 InputEvent event = inputEventQueue.poll();
                 if (firstNode[event.getTrack()] == null) {
-                    judgeEventQueue.add(new JudgeResult(null, frameTime, JudgeResult.State.NotInRange, null));
+                    judgeEventQueue.add(new JudgeResult(
+                            frameTime, event, null, 0,
+                            JudgeResult.State.NotInRange, null));
                     continue FRAME_LOOP;
                 }
-                JudgeResult result = judgeNode(event, firstNode[event.getTrack()]);
+                JudgeResult result = judgeNode(frameTime, event, firstNode[event.getTrack()]);
                 if (result != null) {
                     judgeEventQueue.add(result);
                     if (result.getState() != JudgeResult.State.NotInRange)

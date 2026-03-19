@@ -18,7 +18,7 @@ public class Config {
     public static final int JUDGEMENT_LATE_RANGE = JUDGEMENT_GREAT_RANGE;
     public static final int JUDGEMENT_EARLY_RANGE = JUDGEMENT_LATE_RANGE + JUDGEMENT_EARLY_MISS_WINDOW;
 
-    public static List<Map<String, Integer>> keyMap = new ArrayList<>();
+    public static final List<Map<String, Integer>> keyMap = new ArrayList<>();
 
     static {
         keyMap.add(Map.of(
@@ -39,4 +39,6 @@ public class Config {
     }
 
     public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+    public static final int NOTE_SIZE_DIVISION = 10;
 }

@@ -20,6 +20,17 @@ public class Chart {
         }
     }
 
+    public Chart(Chart chart) {
+        notes = new ArrayList<>();
+        for (List<Note> track : chart.notes) {
+            notes.add(new LinkedList<>(track));
+        }
+    }
+
+    public Chart copy() {
+        return new Chart(this);
+    }
+
     public Note popNote(int track) {
         return ((LinkedList<Note>) (notes.get(track))).pollFirst();
     }

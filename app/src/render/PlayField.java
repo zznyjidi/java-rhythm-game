@@ -68,8 +68,10 @@ public class PlayField extends JPanel {
             // Remove Judged Elements & Add Judge Results
             while (!judgeResults.isEmpty()) {
                 JudgeResult result = judgeResults.poll();
-                drawingObject.add(result);
-                removeElements.add(result.getNote());
+                if (result.getState() != JudgeResult.State.NotInRange) {
+                    drawingObject.add(result);
+                    removeElements.add(result.getNote());
+                }
             }
 
             // Add Elements

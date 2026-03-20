@@ -1,18 +1,20 @@
 package judgment;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 
 import chart.Note;
+import global.Config;
 import input.InputEvent;
 import render.Drawable;
 
 public class JudgeResult implements Drawable {
-    static enum State {
+    public static enum State {
         Perfect, Great, Miss, NotInRange
     }
 
-    static enum Timing {
+    public static enum Timing {
         Early, Critical, Late
     }
 
@@ -106,13 +108,15 @@ public class JudgeResult implements Drawable {
 
     @Override
     public void drawElement(Graphics2D graphics2d, Dimension screenSize, long frameTime) {
-        // TODO: DEBUG ONLY - NO RENDER
-        return;
+        double centerX = screenSize.width * note.getRelX();
+        double centerY = screenSize.height / Config.TRACK_COUNT * (note.getTrack() + 1);
+
+        graphics2d.setColor(new Color(0x000000));
+        graphics2d.drawString(state.name(), (float) centerX, (float) centerY);
     }
 
     @Override
     public boolean isExpired(long frameTime) {
-        // TODO: DEBUG ONLY
-        return true;
+        return (frameTime / 1_000_000) > (this.frameTime + Config.judgementResultDisplayTimeMs);
     }
 }

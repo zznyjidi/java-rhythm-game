@@ -65,14 +65,14 @@ public class Judger implements ActionListener {
                 hitState = JudgeResult.State.NotInRange;
             else if (hitOffset > Config.JUDGEMENT_LATE_RANGE)
                 hitState = JudgeResult.State.Miss;
-            else if (hitOffsetAbsolute >= Config.JUDGEMENT_PERFECT_WINDOW)
+            else if (hitOffsetAbsolute <= Config.JUDGEMENT_PERFECT_WINDOW)
                 hitState = JudgeResult.State.Perfect;
-            else if (hitOffsetAbsolute >= Config.JUDGEMENT_GREAT_RANGE)
+            else if (hitOffsetAbsolute <= Config.JUDGEMENT_GREAT_RANGE)
                 hitState = JudgeResult.State.Great;
             else
                 hitState = JudgeResult.State.Miss;
 
-            if (hitOffsetAbsolute >= Config.JUDGEMENT_CRITICAL_WINDOW)
+            if (hitOffsetAbsolute <= Config.JUDGEMENT_CRITICAL_WINDOW)
                 timing = JudgeResult.Timing.Critical;
             else if (hitOffset > 0)
                 timing = JudgeResult.Timing.Late;

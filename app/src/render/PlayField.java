@@ -78,7 +78,8 @@ public class PlayField extends JPanel {
             long timeMs = frameTime / 1_000_000;
             for (int track = 0; track < Config.TRACK_COUNT; track++) {
                 Note note = this.chart.peakNote(track);
-                if ((note != null) && (note.getTimeMs() > (timeMs + Config.noteDisplayTimeMs))) {
+                if ((note != null)
+                        && ((note.getTimeMs() - timeMs) < (Config.noteDisplayTimeMs + Config.JUDGEMENT_EARLY_RANGE))) {
                     drawingObject.add(this.chart.popNote(track));
                     track--;
                 }

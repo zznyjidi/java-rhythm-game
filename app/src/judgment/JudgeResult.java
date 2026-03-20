@@ -2,8 +2,9 @@ package judgment;
 
 import chart.Note;
 import input.InputEvent;
+import render.Drawable;
 
-public class JudgeResult {
+public class JudgeResult implements Drawable {
     static enum State {
         Perfect, Great, Miss, NotInRange
     }

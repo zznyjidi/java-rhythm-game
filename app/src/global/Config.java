@@ -42,6 +42,6 @@ public class Config {
 
     public static final int NOTE_SIZE_DIVISION = 10;
 
-    public static int noteDisplayTimeMs = 300;
-    public static int judgementResultDisplayTimeMs = 300;
+    public static int noteDisplayTimeMs = 500;
+    public static int judgementResultDisplayTimeMs = 500;
 }

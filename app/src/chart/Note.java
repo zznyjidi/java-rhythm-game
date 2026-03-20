@@ -1,6 +1,14 @@
 package chart;
 
-public class Note {
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.Ellipse2D;
+
+import global.Config;
+import render.Drawable;
+
+public class Note implements Drawable {
     public static final int DIRECTION_RESET = 0;
     public static final int DIRECTION_UP = 1;
     public static final int DIRECTION_DOWN = 2;
@@ -116,5 +124,26 @@ public class Note {
         if (extraParam != other.extraParam)
             return false;
         return true;
+    }
+
+    @Override
+    public void drawElement(Graphics2D graphics2d, Dimension screenSize, long frameTime) {
+        double centerX = screenSize.width * relX;
+        double centerY = screenSize.height / Config.TRACK_COUNT * (track + 1);
+
+        // Draw Note Circle
+        double objectRadius = screenSize.height / Config.NOTE_SIZE_DIVISION;
+        Shape objectCircle = new Ellipse2D.Double(centerX, centerY, objectRadius * 2, objectRadius * 2);
+        graphics2d.draw(objectCircle);
+
+        // TODO: Draw Approch Circle
+    }
+
+    @Override
+    public boolean isExpired(long frameTime) {
+        return switch (this.type) {
+            case TAP -> frameTime > (timeMs + Config.JUDGEMENT_LATE_RANGE);
+            default -> frameTime > (timeMs + duration);
+        };
     }
 }

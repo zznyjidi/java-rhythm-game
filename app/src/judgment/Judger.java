@@ -29,9 +29,12 @@ public class Judger implements ActionListener {
         this.judgeEventQueue = new ConcurrentLinkedQueue<>();
     }
 
-    public void startGame(long startTimeStamp, Chart chart) {
-        this.startTimeStamp = startTimeStamp;
+    public void setChart(Chart chart) {
         this.currentChart = chart;
+    }
+
+    public void startGame(long startTimeStamp) {
+        this.startTimeStamp = startTimeStamp;
         this.judgementFrameTimer.start();
     }
 

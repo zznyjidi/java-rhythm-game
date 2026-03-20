@@ -1,5 +1,6 @@
 package chart;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -130,13 +131,23 @@ public class Note implements Drawable {
     public void drawElement(Graphics2D graphics2d, Dimension screenSize, long frameTime) {
         double centerX = screenSize.width * relX;
         double centerY = screenSize.height / Config.TRACK_COUNT * (track + 1);
+        long deltaTimeMs = timeMs - frameTime;
 
         // Draw Note Circle
-        double objectRadius = screenSize.height / Config.NOTE_SIZE_DIVISION;
-        Shape objectCircle = new Ellipse2D.Double(centerX, centerY, objectRadius * 2, objectRadius * 2);
+        double objectRadius = ((double) screenSize.height) / Config.NOTE_SIZE_DIVISION;
+        Shape objectCircle = new Ellipse2D.Double(
+                centerX - objectRadius, centerY - objectRadius,
+                objectRadius * 2, objectRadius * 2);
         graphics2d.fill(objectCircle);
 
-        // TODO: Draw Approch Circle
+        // Draw Approach Circle
+        double circleRadius = objectRadius +
+                (objectRadius * (((double) deltaTimeMs) / (Config.JUDGEMENT_EARLY_RANGE + Config.noteDisplayTimeMs)));
+        Shape approachCircle = new Ellipse2D.Double(
+                centerX - circleRadius, centerY - circleRadius,
+                circleRadius * 2, circleRadius * 2);
+        graphics2d.setColor(new Color(0x000000));
+        graphics2d.draw(approachCircle);
     }
 
     @Override

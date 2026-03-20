@@ -41,4 +41,6 @@ public class Config {
     public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
     public static final int NOTE_SIZE_DIVISION = 10;
+
+    public static int noteDisplayTimeMs = 300;
 }

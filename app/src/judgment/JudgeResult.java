@@ -1,5 +1,8 @@
 package judgment;
 
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+
 import chart.Note;
 import input.InputEvent;
 import render.Drawable;
@@ -98,6 +101,18 @@ public class JudgeResult implements Drawable {
                 return false;
         } else if (!note.equals(other.note))
             return false;
+        return true;
+    }
+
+    @Override
+    public void drawElement(Graphics2D graphics2d, Dimension screenSize, long frameTime) {
+        // TODO: DEBUG ONLY - NO RENDER
+        return;
+    }
+
+    @Override
+    public boolean isExpired(long frameTime) {
+        // TODO: DEBUG ONLY
         return true;
     }
 }

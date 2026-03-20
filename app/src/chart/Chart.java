@@ -34,4 +34,10 @@ public class Chart {
     public Note popNote(int track) {
         return ((LinkedList<Note>) (notes.get(track))).pollFirst();
     }
+
+    public Note peakNote(int track) {
+        if (notes.get(track).isEmpty())
+            return null;
+        return ((LinkedList<Note>) (notes.get(track))).getFirst();
+    }
 }

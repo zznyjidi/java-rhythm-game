@@ -12,6 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.JPanel;
 
 import chart.Chart;
+import chart.Note;
 import global.Config;
 import input.KeyMap;
 import judgment.JudgeResult;
@@ -19,6 +20,7 @@ import judgment.Judger;
 
 public class PlayField extends JPanel {
     Lock frameLock = new ReentrantLock();
+    long startTime;
 
     KeyMap keyMap;
     Judger judger;
@@ -44,15 +46,17 @@ public class PlayField extends JPanel {
     }
 
     public void startGame(long frameTime) {
+        this.startTime = frameTime;
         judger.startGame(frameTime);
     }
 
-    public void processFrame(long frameTime) {
+    public void processFrame(long nanoTime) {
         if (!frameLock.tryLock()) {
             System.err.println("O");
             return;
         }
         try {
+            long frameTime = nanoTime - startTime;
             Set<Drawable> removeElements = new HashSet<>();
 
             // Remove Expired Elements
@@ -68,7 +72,15 @@ public class PlayField extends JPanel {
                 removeElements.add(result.getNote());
             }
 
-            // TODO: Add Elements
+            // Add Elements
+            long timeMs = frameTime / 1_000_000;
+            for (int track = 0; track < Config.TRACK_COUNT; track++) {
+                Note note = this.chart.peakNote(track);
+                if ((note != null) && (note.getTimeMs() > (timeMs + Config.noteDisplayTimeMs))) {
+                    drawingObject.add(this.chart.popNote(track));
+                    track--;
+                }
+            }
 
             // Commit Removal
             for (Drawable drawable : removeElements)

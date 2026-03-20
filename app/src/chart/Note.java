@@ -134,16 +134,17 @@ public class Note implements Drawable {
         // Draw Note Circle
         double objectRadius = screenSize.height / Config.NOTE_SIZE_DIVISION;
         Shape objectCircle = new Ellipse2D.Double(centerX, centerY, objectRadius * 2, objectRadius * 2);
-        graphics2d.draw(objectCircle);
+        graphics2d.fill(objectCircle);
 
         // TODO: Draw Approch Circle
     }
 
     @Override
     public boolean isExpired(long frameTime) {
+        long timeMs = frameTime / 1_000_000;
         return switch (this.type) {
-            case TAP -> frameTime > (timeMs + Config.JUDGEMENT_LATE_RANGE);
-            default -> frameTime > (timeMs + duration);
+            case TAP -> timeMs > (timeMs + Config.JUDGEMENT_LATE_RANGE);
+            default -> timeMs > (timeMs + duration);
         };
     }
 }

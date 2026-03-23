@@ -9,9 +9,10 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import chart.Chart;
+import global.Config;
 
 public class LevelManager implements ActionListener {
-    Timer renderingFrameTimer = new Timer(1000 / 60, this);
+    Timer renderingFrameTimer = new Timer(1000 / Config.frameLimit, this);
     Lock frameLock = new ReentrantLock();
 
     PlayField playField;

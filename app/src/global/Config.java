@@ -39,6 +39,7 @@ public class Config {
     }
 
     public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    public static int frameLimit = 120;
 
     public static final int NOTE_SIZE_DIVISION = 10;
 
